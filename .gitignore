@@ -1,0 +1,16 @@
+/target/
+/bpf/target/
+
+/runs/
+
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+.DS_Store
+Thumbs.db
+
+.env
+.env.*

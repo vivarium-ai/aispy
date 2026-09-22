@@ -1,0 +1,34 @@
+[package]
+name = "aispy-ebpf"
+version = "0.1.0"
+edition = "2024"
+description = "Linux eBPF probes used by AiSpy"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/vivarium-ai/aispy"
+publish = false
+
+[[bin]]
+name = "aispy-ebpf"
+path = "src/main.rs"
+
+[dependencies]
+aya-ebpf = "0.2.1"
+
+[profile.dev]
+opt-level = 2
+debug = 2
+overflow-checks = false
+
+[profile.release]
+opt-level = 3
+debug = 2
+lto = true
+codegen-units = 1
+panic = "abort"
+overflow-checks = false
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+all = "warn"

@@ -1,0 +1,86 @@
+[package]
+name = "aispy"
+version = "0.1.0"
+edition = "2024"
+description = "Rust-native performance instrumentation and analysis for heterogeneous CPU/GPU workloads"
+license = "MIT"
+repository = "https://github.com/vivarium-ai/aispy"
+readme = "README.md"
+publish = false
+
+[workspace]
+resolver = "3"
+members = [
+    "crates/aispy-macros",
+]
+exclude = [
+    "bpf",
+]
+
+[lib]
+name = "aispy"
+path = "src/lib.rs"
+
+[[bin]]
+name = "aispy"
+path = "src/bin/aispy/main.rs"
+required-features = ["cli"]
+
+[features]
+default = []
+
+# In-process CUDA/CUPTI integration used by instrumented workloads.
+cuda = [
+    "dep:libloading",
+]
+
+# Builds the aispy command-line tool and its external collectors,
+# persistence, verification, and analysis machinery.
+cli = [
+    "dep:anyhow",
+    "dep:arrow",
+    "dep:aya",
+    "dep:blake3",
+    "dep:clap",
+    "dep:duckdb",
+    "dep:nvml-wrapper",
+    "dep:parquet",
+    "dep:serde_json",
+    "dep:toml",
+]
+
+[dependencies]
+aispy-macros = { path = "crates/aispy-macros", version = "0.1.0" }
+
+# Small dependencies permitted in the library linked into workloads.
+bytemuck = { version = "1", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+uuid = { version = "1", features = ["serde", "v7"] }
+
+# Optional in-process CUPTI loading.
+libloading = { version = "0.8", optional = true }
+
+# CLI-only dependencies.
+anyhow = { version = "1", optional = true }
+arrow = { version = "59", optional = true }
+blake3 = { version = "1", optional = true }
+clap = { version = "4.6", features = ["derive"], optional = true }
+duckdb = { version = "1.10505.0", features = ["bundled"], optional = true }
+parquet = { version = "59", features = ["arrow"], optional = true }
+serde_json = { version = "1", optional = true }
+toml = { version = "1", optional = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+aya = { version = "0.14", optional = true }
+nvml-wrapper = { version = "0.11", optional = true }
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
