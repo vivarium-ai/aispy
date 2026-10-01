@@ -3,6 +3,10 @@ name: Docker
 on:
   workflow_call:
 
+env:
+  DOCKER_IMAGE: ghcr.io/${{ github.repository }}
+  GIT_TAG: ${{ github.ref_name }}
+
 jobs:
   image:
     name: Build and push image
@@ -24,24 +28,10 @@ jobs:
       - name: Build image
         shell: bash
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          TAG="${GITHUB_REF_NAME}"
-
-          docker buildx build \
-            --platform linux/amd64 \
-            --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
-            --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
-            --label "org.opencontainers.image.version=${TAG}" \
-            --tag "${IMAGE}:${TAG}" \
-            --tag "${IMAGE}:latest" \
-            --load \
-            .
+          make build-container
 
       - name: Push image
         shell: bash
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          TAG="${GITHUB_REF_NAME}"
-
-          docker push "${IMAGE}:${TAG}"
-          docker push "${IMAGE}:latest"
+          docker push "${DOCKER_IMAGE}:${GIT_TAG}"
+          docker push "${DOCKER_IMAGE}:latest"
