@@ -1,4 +1,4 @@
-use anyhow::Result;
+use crate::Result;
 
 pub trait EntityResolver {
     fn cpu(&mut self, cpu: u32) -> Result<u64>;

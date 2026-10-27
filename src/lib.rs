@@ -6,8 +6,14 @@ compile_error!(
 
 extern crate self as aispy;
 
+pub mod device;
 pub mod entities;
+pub mod error;
 pub mod event;
 pub mod observation;
 
+#[cfg(feature = "cuda")]
+pub mod cupti;
+
 pub use aispy_macros::observe;
+pub use error::{Error, Result};
