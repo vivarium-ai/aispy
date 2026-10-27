@@ -2,9 +2,7 @@ use libloading::{Library, Symbol};
 
 use crate::{Error, Result};
 
-type CuptiGetVersion = unsafe extern "C" fn(
-    version: *mut u32,
-) -> i32;
+type CuptiGetVersion = unsafe extern "C" fn(version: *mut u32) -> i32;
 
 pub struct Cupti {
     library: Library,
@@ -12,10 +10,7 @@ pub struct Cupti {
 
 impl Cupti {
     pub fn load() -> Result<Self> {
-        let library = unsafe {
-            Library::new("libcupti.so")
-        }
-        .map_err(|error| Error::CuptiLoad {
+        let library = unsafe { Library::new("libcupti.so") }.map_err(|error| Error::CuptiLoad {
             message: error.to_string(),
         })?;
 
@@ -32,9 +27,7 @@ impl Cupti {
 
         let mut version = 0;
 
-        let result = unsafe {
-            get_version(&mut version)
-        };
+        let result = unsafe { get_version(&mut version) };
 
         if result != 0 {
             return Err(Error::CuptiCall {

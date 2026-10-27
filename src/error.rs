@@ -6,15 +6,10 @@ pub enum Error {
     EntityResolution,
 
     #[error("failed to load CUPTI: {message}")]
-    CuptiLoad {
-        message: String,
-    },
+    CuptiLoad { message: String },
 
     #[error("CUPTI call {function} failed with result {result}")]
-    CuptiCall {
-        function: &'static str,
-        result: i32,
-    },
+    CuptiCall { function: &'static str, result: i32 },
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
