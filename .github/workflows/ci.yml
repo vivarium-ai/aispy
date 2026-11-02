@@ -20,7 +20,7 @@ jobs:
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - run: make library
+      - run: make build-library
 
   cuda:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
         with:
           components: clippy
       - uses: Swatinem/rust-cache@v2
-      - run: make cuda
+      - run: make build-cuda
 
   cli:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         with:
           components: clippy
       - uses: Swatinem/rust-cache@v2
-      - run: make cli
+      - run: make build-cli
 
   ebpf:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
           components: rust-src
       - uses: Swatinem/rust-cache@v2
       - run: cargo install bpf-linker --locked
-      - run: make ebpf
+      - run: make build-ebpf
 
   docker:
     name: Docker
