@@ -45,3 +45,37 @@ pub enum EventKind {
     DeviceRangeBegin,
     DeviceRangeEnd,
 }
+
+impl ClockDomain {
+    pub const fn as_str(&self) -> &'static str {
+        match self {
+            Self::HostMonotonic => "host.monotonic",
+            Self::Device => "device",
+        }
+    }
+}
+
+impl EventSource {
+    pub const fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ebpf => "ebpf",
+            Self::Semantic => "semantic",
+            Self::Cupti => "cupti",
+            Self::Device => "device",
+        }
+    }
+}
+
+impl EventKind {
+    pub const fn as_str(&self) -> &'static str {
+        match self {
+            Self::SchedulerWakeup => "scheduler.wakeup",
+            Self::SchedulerSwitch => "scheduler.switch",
+            Self::ObservationBegin => "observation.begin",
+            Self::ObservationEnd => "observation.end",
+            Self::DeviceMarker => "device.marker",
+            Self::DeviceRangeBegin => "device.range.begin",
+            Self::DeviceRangeEnd => "device.range.end",
+        }
+    }
+}

@@ -52,6 +52,9 @@ build-ebpf: ## Build the eBPF collector
 test: ## Run tests
 	$(SCRIPTS_DIR)/test-workspace.sh
 
+test-cli: ## Run CLI tests
+	$(SCRIPTS_DIR)/test-cli.sh
+
 ##@ Project Management
 install: build ## Install the project
 	$(SCRIPTS_DIR)/install.sh
