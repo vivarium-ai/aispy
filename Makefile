@@ -39,6 +39,12 @@ build-cli: ## Build the CLI component
 build-library: ## Build the collector library
 	$(SCRIPTS_DIR)/build-library.sh
 
+build-macros: ## Build the Rust code macros
+	$(SCRIPTS_DIR)/build-macros.sh
+
+build-cuda: ## Build the CUDA instrumentation support
+	$(SCRIPTS_DIR)/build-cuda.sh
+
 build-ebpf: ## Build the eBPF collector
 	$(SCRIPTS_DIR)/build-ebpf.sh
 
