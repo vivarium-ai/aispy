@@ -7,8 +7,7 @@ pub struct NvmlCollector {
 
 impl NvmlCollector {
     pub fn new() -> Result<Self> {
-        let nvml = Nvml::init()
-            .context("failed to initialize NVML")?;
+        let nvml = Nvml::init().context("failed to initialize NVML")?;
 
         Ok(Self { nvml })
     }

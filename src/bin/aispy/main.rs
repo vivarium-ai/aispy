@@ -14,20 +14,13 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use uuid::Uuid;
 
-use aispy::{
-    entities::EntityResolver,
-    event::Event,
-};
+use aispy::{entities::EntityResolver, event::Event};
 
 use cli::{Cli, Command};
-use collectors::{
-    ebpf::EbpfCollector,
-    nvml::NvmlCollector,
-};
+use collectors::{ebpf::EbpfCollector, nvml::NvmlCollector};
 use writer::EventWriter;
 
-const EBPF_OBJECT: &str =
-    "bpf/target/bpfel-unknown-none/release/aispy-bpf";
+const EBPF_OBJECT: &str = "bpf/target/bpfel-unknown-none/release/aispy-bpf";
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -51,15 +44,10 @@ fn main() -> Result<()> {
     }
 }
 
-fn run(
-    _config: Option<PathBuf>,
-    output: Option<PathBuf>,
-    command: Vec<OsString>,
-) -> Result<()> {
+fn run(_config: Option<PathBuf>, output: Option<PathBuf>, command: Vec<OsString>) -> Result<()> {
     let (run_id, run_dir) = create_run(output)?;
 
-    let mut writer =
-        EventWriter::create(run_dir.join("events.parquet"), run_id)?;
+    let mut writer = EventWriter::create(run_dir.join("events.parquet"), run_id)?;
 
     let mut child = spawn_workload(&command)?;
 
@@ -76,18 +64,12 @@ fn run(
         if let Some(collector) = &mut ebpf {
             let mut events = Vec::<Event>::new();
 
-            collector.drain(
-                &mut entities,
-                &mut |event| events.push(event),
-            )?;
+            collector.drain(&mut entities, &mut |event| events.push(event))?;
 
             writer.write(&events)?;
         }
 
-        if let Some(status) = child
-            .try_wait()
-            .context("failed waiting for workload")?
-        {
+        if let Some(status) = child.try_wait().context("failed waiting for workload")? {
             writer.close()?;
 
             if !status.success() {
@@ -103,24 +85,17 @@ fn run(
     Ok(())
 }
 
-fn collect(
-    _pid: u32,
-    _config: Option<PathBuf>,
-    output: Option<PathBuf>,
-) -> Result<()> {
+fn collect(_pid: u32, _config: Option<PathBuf>, output: Option<PathBuf>) -> Result<()> {
     let (run_id, run_dir) = create_run(output)?;
 
-    let writer =
-        EventWriter::create(run_dir.join("events.parquet"), run_id)?;
+    let writer = EventWriter::create(run_dir.join("events.parquet"), run_id)?;
 
     writer.close()?;
 
     Ok(())
 }
 
-fn spawn_workload(
-    command: &[OsString],
-) -> Result<std::process::Child> {
+fn spawn_workload(command: &[OsString]) -> Result<std::process::Child> {
     let (program, args) = command
         .split_first()
         .context("no workload command specified")?;
@@ -128,9 +103,7 @@ fn spawn_workload(
     std::process::Command::new(program)
         .args(args)
         .spawn()
-        .with_context(|| {
-            format!("failed to start workload {program:?}")
-        })
+        .with_context(|| format!("failed to start workload {program:?}"))
 }
 
 fn load_ebpf() -> Option<EbpfCollector> {
@@ -144,9 +117,7 @@ fn load_ebpf() -> Option<EbpfCollector> {
         Ok(collector) => Some(collector),
 
         Err(error) => {
-            eprintln!(
-                "warning: eBPF collection unavailable: {error}"
-            );
+            eprintln!("warning: eBPF collection unavailable: {error}");
             None
         }
     }
@@ -155,16 +126,10 @@ fn load_ebpf() -> Option<EbpfCollector> {
 fn create_run(output: Option<PathBuf>) -> Result<(Uuid, PathBuf)> {
     let run_id = Uuid::now_v7();
 
-    let run_dir = output.unwrap_or_else(|| {
-        Path::new("runs").join(run_id.to_string())
-    });
+    let run_dir = output.unwrap_or_else(|| Path::new("runs").join(run_id.to_string()));
 
-    fs::create_dir_all(&run_dir).with_context(|| {
-        format!(
-            "failed to create run directory {}",
-            run_dir.display()
-        )
-    })?;
+    fs::create_dir_all(&run_dir)
+        .with_context(|| format!("failed to create run directory {}", run_dir.display()))?;
 
     Ok((run_id, run_dir))
 }

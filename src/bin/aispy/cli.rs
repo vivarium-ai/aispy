@@ -48,15 +48,11 @@ pub enum Command {
     /// Verify the integrity and internal consistency of a captured run.
     ///
     /// Checks the run metadata, schemas, files, and recorded integrity data.
-    Verify {
-        run: PathBuf,
-    },
+    Verify { run: PathBuf },
 
     /// Analyze a completed run for performance bottlenecks.
     ///
     /// Examines captured observations to identify critical-path delays,
     /// resource bottlenecks, contention, queueing, and other throughput limits.
-    Analyze {
-        run: PathBuf,
-    },
+    Analyze { run: PathBuf },
 }
