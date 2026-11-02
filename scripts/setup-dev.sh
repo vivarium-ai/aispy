@@ -14,7 +14,7 @@ sudo apt install -y \
   bpftool \
   podman
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 cargo install bindgen-cli
 cargo install --git https://github.com/aya-rs/aya -- aya-tool

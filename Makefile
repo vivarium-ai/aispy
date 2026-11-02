@@ -18,7 +18,8 @@ export PREFIX
 all: config build test
 
 ##@ Dependencies
-setup: setup-ebpf ## Setup project
+setup-dev: ## Setup developer image
+	$(SCRIPTS_DIR)/setup-dev.sh
 
 setup-ebpf: ## Setup ebpf component
 	$(SCRIPTS_DIR)/setup-ebpf.sh

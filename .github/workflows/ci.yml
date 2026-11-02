@@ -12,45 +12,50 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  library:
+  verify-workspace:
+    name: Verify workspace
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
+      - run: make setup-dev
+      - run: make verify-workspace
+
+  library:
+    name: Build support library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - run: make setup-dev
       - run: make build-library
 
   cuda:
+    name: Build CUDA instrumentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy
       - uses: Swatinem/rust-cache@v2
+      - run: make setup-dev
       - run: make build-cuda
 
   cli:
+    name: Build CLI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy
       - uses: Swatinem/rust-cache@v2
+      - run: make setup-dev
       - run: make build-cli
 
   ebpf:
+    name: Build eBPF
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rust-src
       - uses: Swatinem/rust-cache@v2
-      - run: cargo install bpf-linker --locked
+      - run: make setup-dev
+      - run: make setup-ebpf
       - run: make build-ebpf
 
   docker:
