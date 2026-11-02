@@ -24,6 +24,7 @@ jobs:
   library:
     name: Build support library
     runs-on: ubuntu-latest
+    needs: verify-workspace
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
@@ -33,6 +34,7 @@ jobs:
   cuda:
     name: Build CUDA instrumentation
     runs-on: ubuntu-latest
+    needs: verify-workspace
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
@@ -42,6 +44,7 @@ jobs:
   cli:
     name: Build CLI
     runs-on: ubuntu-latest
+    needs: verify-workspace
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
@@ -51,6 +54,7 @@ jobs:
   ebpf:
     name: Build eBPF
     runs-on: ubuntu-latest
+    needs: verify-workspace
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
@@ -61,6 +65,7 @@ jobs:
   docker:
     name: Docker
     needs:
+      - verify-workspace
       - library
       - cli
       - cuda
