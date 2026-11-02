@@ -106,10 +106,6 @@ impl EbpfCollector {
 
         Ok(count)
     }
-
-    pub fn ring_buffer(&self) -> &RingBuf<aya::maps::MapData> {
-        &self.events
-    }
 }
 
 fn attach_btf_tracepoint(
