@@ -6,6 +6,7 @@ REPO_ROOT=$(CDPATH='' cd -- "$SCRIPT_DIR/.." && pwd)
 cd "$REPO_ROOT"
 
 cargo +nightly build \
-  --manifest-path bpf/Cargo.toml \
-  --release \
-  --target bpfel-unknown-none
+    --manifest-path ebpf/Cargo.toml \
+    --target bpfel-unknown-none \
+    -Z build-std=core \
+    --release

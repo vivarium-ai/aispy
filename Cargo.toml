@@ -14,7 +14,7 @@ members = [
     "crates/aispy-macros",
 ]
 exclude = [
-    "bpf",
+    "ebpf",
 ]
 
 [lib]

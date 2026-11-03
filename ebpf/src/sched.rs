@@ -1,9 +1,5 @@
 use aya_ebpf::{
-    helpers::{
-        bpf_get_current_pid_tgid,
-        bpf_get_smp_processor_id,
-        bpf_ktime_get_ns,
-    },
+    helpers::{bpf_get_current_pid_tgid, bpf_get_smp_processor_id, bpf_ktime_get_ns},
     macros::{btf_tracepoint, map},
     maps::RingBuf,
     programs::BtfTracePointContext,
@@ -25,9 +21,7 @@ pub fn sched_wakeup(ctx: BtfTracePointContext) -> u32 {
     }
 }
 
-unsafe fn try_sched_wakeup(
-    ctx: BtfTracePointContext,
-) -> Result<(), i32> {
+unsafe fn try_sched_wakeup(ctx: BtfTracePointContext) -> Result<(), i32> {
     let task: *const task_struct = ctx.arg(0);
 
     if task.is_null() {
@@ -40,10 +34,10 @@ unsafe fn try_sched_wakeup(
     let waker_tid = pid_tgid as u32;
 
     emit(SchedEvent {
-        timestamp_ns: bpf_ktime_get_ns(),
+        timestamp_ns: unsafe { bpf_ktime_get_ns() },
 
         kind: SchedEventKind::Wakeup as u32,
-        cpu: bpf_get_smp_processor_id(),
+        cpu: unsafe { bpf_get_smp_processor_id() },
 
         tid: wakee_tid,
         related_tid: waker_tid,
@@ -63,9 +57,7 @@ pub fn sched_switch(ctx: BtfTracePointContext) -> u32 {
     }
 }
 
-unsafe fn try_sched_switch(
-    ctx: BtfTracePointContext,
-) -> Result<(), i32> {
+unsafe fn try_sched_switch(ctx: BtfTracePointContext) -> Result<(), i32> {
     /*
      * Current kernel tracepoint prototype:
      *
@@ -85,10 +77,10 @@ unsafe fn try_sched_switch(
     }
 
     emit(SchedEvent {
-        timestamp_ns: bpf_ktime_get_ns(),
+        timestamp_ns: unsafe { bpf_ktime_get_ns() },
 
         kind: SchedEventKind::Switch as u32,
-        cpu: bpf_get_smp_processor_id(),
+        cpu: unsafe { bpf_get_smp_processor_id() },
 
         tid: unsafe { (*prev).pid as u32 },
         related_tid: unsafe { (*next).pid as u32 },
