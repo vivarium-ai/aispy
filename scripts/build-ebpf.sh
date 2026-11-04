@@ -5,6 +5,10 @@ SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname "$0")" && pwd)
 REPO_ROOT=$(CDPATH='' cd -- "$SCRIPT_DIR/.." && pwd)
 cd "$REPO_ROOT"
 
+cargo build \
+    --package aispy-ebpf-common \
+    --release
+
 cargo +nightly build \
     --manifest-path ebpf/Cargo.toml \
     --target bpfel-unknown-none \

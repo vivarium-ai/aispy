@@ -56,6 +56,9 @@ test: ## Run tests
 test-cli: ## Run CLI tests
 	$(SCRIPTS_DIR)/test-cli.sh
 
+test-ebpf: ## Run eBPF module tests
+	$(SCRIPTS_DIR)/test-ebpf.sh
+
 ##@ Project Management
 install: build ## Install the project
 	$(SCRIPTS_DIR)/install.sh

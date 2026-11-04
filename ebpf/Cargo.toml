@@ -13,6 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 aya-ebpf = "0.2.1"
+aispy-ebpf-common = { path = "../crates/aispy-ebpf-common", version = "0.1.0" }
 
 [profile.dev]
 opt-level = 2

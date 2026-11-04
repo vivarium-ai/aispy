@@ -34,8 +34,8 @@ pub enum EventSource {
 #[derive(Debug, Default)]
 pub enum EventKind {
     #[default]
+    SchedulerMigrate,
     SchedulerWakeup,
-
     SchedulerSwitch,
 
     ObservationBegin,
@@ -69,6 +69,7 @@ impl EventSource {
 impl EventKind {
     pub const fn as_str(&self) -> &'static str {
         match self {
+            Self::SchedulerMigrate => "scheduler.migrate",
             Self::SchedulerWakeup => "scheduler.wakeup",
             Self::SchedulerSwitch => "scheduler.switch",
             Self::ObservationBegin => "observation.begin",

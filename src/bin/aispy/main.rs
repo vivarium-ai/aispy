@@ -1,6 +1,4 @@
 mod cli;
-mod collectors;
-mod writer;
 
 use std::{
     ffi::OsString,
@@ -14,11 +12,13 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use uuid::Uuid;
 
-use aispy::{entities::EntityResolver, event::Event};
-
+use aispy::{
+    collectors::{ebpf::EbpfCollector, nvml::NvmlCollector},
+    entities::EntityResolver,
+    event::Event,
+    writer::EventWriter,
+};
 use cli::{Cli, Command};
-use collectors::{ebpf::EbpfCollector, nvml::NvmlCollector};
-use writer::EventWriter;
 
 const EBPF_OBJECT: &str = "bpf/target/bpfel-unknown-none/release/aispy-bpf";
 

@@ -1,24 +1,13 @@
 #![no_std]
 #![no_main]
 
-mod event;
+mod emit;
 mod sched;
-
-#[allow(
-    clippy::all,
-    dead_code,
-    improper_ctypes_definitions,
-    non_camel_case_types,
-    non_snake_case,
-    non_upper_case_globals,
-    unnecessary_transmutes,
-    unsafe_op_in_unsafe_fn,
-)]
-#[rustfmt::skip]
 mod vmlinux;
 
-#[cfg(not(test))]
+use core::panic::PanicInfo;
+
 #[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    loop {}
+fn panic(_info: &PanicInfo) -> ! {
+    unsafe { core::hint::unreachable_unchecked() }
 }

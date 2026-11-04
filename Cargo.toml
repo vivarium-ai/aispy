@@ -12,6 +12,7 @@ publish = false
 resolver = "3"
 members = [
     "crates/aispy-macros",
+    "crates/aispy-ebpf-common",
 ]
 exclude = [
     "ebpf",
@@ -51,6 +52,7 @@ cli = [
 
 [dependencies]
 aispy-macros = { path = "crates/aispy-macros", version = "0.1.0" }
+aispy-ebpf-common = { path = "crates/aispy-ebpf-common", version = "0.1.0" }
 
 # Small dependencies permitted in the library linked into workloads.
 bytemuck = { version = "1", features = ["derive"] }

@@ -6,11 +6,13 @@ compile_error!(
 
 extern crate self as aispy;
 
+pub mod collectors;
 pub mod device;
 pub mod entities;
 pub mod error;
 pub mod event;
 pub mod observation;
+pub mod writer;
 
 #[cfg(feature = "cuda")]
 pub mod cupti;
