@@ -1,6 +1,8 @@
 use std::{mem::size_of, path::Path, ptr};
 
-use aispy_ebpf_common::{EventKind as WireEventKind, SchedSwitch, SchedWakeup, WireEvent};
+use aispy_ebpf_common::{
+    EventKind as WireEventKind, SchedMigrate, SchedSwitch, SchedWakeup, WireEvent,
+};
 use anyhow::{Context, Result, bail};
 use aya::{
     Btf, Ebpf,
@@ -158,7 +160,11 @@ fn normalize(wire: WireEvent, entities: &mut impl EntityResolver) -> Result<Even
         }
 
         WireEventKind::SchedMigrate => {
-            bail!("SchedMigrate normalization is not implemented")
+            let payload = wire
+                .as_sched_migrate()
+                .context("SchedMigrate wire event has an invalid payload")?;
+
+            normalize_sched_migrate(wire, payload, entities)
         }
 
         other => {
@@ -223,6 +229,31 @@ fn normalize_sched_wakeup(
         } else {
             Some(i64::from(payload.target_cpu))
         },
+
+        ..Event::default()
+    })
+}
+
+fn normalize_sched_migrate(
+    wire: WireEvent,
+    payload: SchedMigrate,
+    entities: &mut impl EntityResolver,
+) -> Result<Event> {
+    let cpu_entity_id = entities.cpu(wire.cpu)?;
+    let thread_entity_id = entities.thread(payload.tid)?;
+
+    Ok(Event {
+        timestamp: wire.timestamp_ns,
+        clock_domain: ClockDomain::HostMonotonic,
+
+        source: EventSource::Ebpf,
+        kind: EventKind::SchedulerMigrate,
+
+        entity_id: Some(cpu_entity_id),
+        thread_entity_id: Some(thread_entity_id),
+        related_entity_id: None,
+
+        value_i64: Some(i64::from(payload.destination_cpu)),
 
         ..Event::default()
     })

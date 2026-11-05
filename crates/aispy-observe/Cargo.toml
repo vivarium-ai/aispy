@@ -1,0 +1,18 @@
+[package]
+name = "aispy-observe"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+aispy-macros = { path = "../aispy-macros", version = "0.1.0" }
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

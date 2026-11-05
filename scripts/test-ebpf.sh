@@ -21,4 +21,12 @@ cargo +nightly build \
     --release
 
 # Run the real Linux/kernel integration test.
-cargo test --test ebpf -- --ignored --nocapture
+cargo test --test ebpf --no-run
+
+TEST_BIN=$(
+    cargo test --test ebpf --no-run --message-format=json |
+    jq -r 'select(.profile.test == true) | .executable' |
+    tail -1
+)
+
+sudo "$TEST_BIN" --ignored --nocapture

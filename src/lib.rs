@@ -14,8 +14,5 @@ pub mod event;
 pub mod observation;
 pub mod writer;
 
-#[cfg(feature = "cuda")]
-pub mod cupti;
-
 pub use aispy_macros::observe;
 pub use error::{Error, Result};

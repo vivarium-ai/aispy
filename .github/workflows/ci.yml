@@ -50,6 +50,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: make setup-dev
       - run: make build-cli
+      - run: make test-cli
 
   ebpf:
     name: Build eBPF
@@ -61,6 +62,7 @@ jobs:
       - run: make setup-dev
       - run: make setup-ebpf
       - run: make build-ebpf
+      - run: make test-ebpf
 
   docker:
     name: Docker
